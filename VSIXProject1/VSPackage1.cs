@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Grpc.Core;
 using Sonarlint;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace VSIXProject1
 {
@@ -32,8 +33,9 @@ namespace VSIXProject1
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
-    [Guid(VSPackage1.PackageGuidString)]
+    [Guid(PackageGuidString)]
+    [ProvideBindingPath]
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class VSPackage1 : Package
     {
@@ -68,7 +70,7 @@ namespace VSIXProject1
 
         private void runPOC()
         {
-            Channel channel = new Channel("127.0.0.1:8050", ChannelCredentials.Insecure);
+            Channel channel = new Channel("localhost:8050", ChannelCredentials.Insecure);
             var client = new StandaloneSonarLint.StandaloneSonarLintClient(channel);
 
             // sanity check ...
